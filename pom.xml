@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.souche</groupId>
+	<artifactId>mock</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>souche-dubbo-mock</name>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<optimus.version>1.4.3</optimus.version>
+		<dubbo.version>2.5.8</dubbo.version>
+		<spring.version>4.3.2.RELEASE</spring.version>
+		<cglib.version>2.2.2</cglib.version>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<project.encoding>utf-8</project.encoding>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>eclipse</id>
+			<properties>
+				<package.environment>eclipse</package.environment>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>build/velocity</directory>
+						<targetPath>${basedir}/src/main/webapp/WEB-INF/velocity/system</targetPath>
+						<includes>
+							<include>*.vm</include>
+						</includes>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>intelliJ</id>
+			<properties>
+				<package.environment>intelliJ</package.environment>
+			</properties>
+		</profile>
+	</profiles>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo</artifactId>
+				<version>${dubbo.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.souche</groupId>
+				<artifactId>optimus-core</artifactId>
+				<version>${optimus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.souche</groupId>
+				<artifactId>optimus-orm</artifactId>
+				<version>${optimus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.souche</groupId>
+				<artifactId>optimus-swagger</artifactId>
+				<version>${optimus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-expression</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.souche</groupId>
+				<artifactId>optimus-swagger</artifactId>
+				<version>${optimus.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<name>Local Nexus Repository</name>
+			<url>https://repo.souche-inc.com/repository/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>Local Nexus Repository</name>
+			<url>https://repo.souche-inc.com/repository/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+
+  <modules>
+    <module>web</module>
+    <module>api</module>
+  </modules>
+</project>

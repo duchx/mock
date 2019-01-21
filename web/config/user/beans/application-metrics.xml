@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<bean id="perfCounter" class="com.souche.optimus.remoting.metrics.profiler.PerfCounter">
+		<property name="interval" 	value="${monitor.interval}"/> <!-- 10秒 -->
+		<property name="enable" 	value="${monitor.enable}"/>  <!-- 开关 -->
+		<property name="appName" 	value="${systemInfo.appName}"/> <!-- 请升级config maven plugin 到 1.0.6 -->
+		<property name="appEnv" 	value="${systemInfo.env}"/>	<!-- 或者手工建一个systemInfo.properties, 配置这两个参数 -->
+		<property name="config"		ref="senderConfig"/>
+		<property name="reporter"   ref="metricReporter"/>
+	</bean>
+	
+	<bean id="senderConfig" class="com.souche.optimus.remoting.metrics.profiler.SenderConfig">
+		<property name="senderName" value="${monitor.sender}" />
+		
+		<!-- include规则, 可以用includePattern,或者includePatternList, 两者一起用的时候, 都起作用 -->
+		<!-- 上报白名单 -->
+<!-- 		<property name="includePatternList">
+            <list>
+            </list>
+        </property> -->
+		
+		<!-- exclude规则, 可以用excludePattern,或者excludePatternList, 两者一起用的时候, 都起作用 -->
+		<!-- 上报黑名单 -->
+<!-- 		<property name="excludePatternList">
+            <list>
+            </list>
+        </property> -->
+		<property name="config">
+			<map>
+				<entry key="statsd.host" value="${monitor.statsd.host}"/>
+				<entry key="statsd.port" value="${monitor.statsd.port}"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="metricReporter" class="com.souche.optimus.remoting.metrics.MetricReporter">
+		<property name="list">
+			<list>
+				<bean class="com.souche.optimus.remoting.metrics.collector.JVMMetrics"/>
+				<bean class="com.souche.optimus.remoting.metrics.collector.CallerMetrics" />
+			</list>
+		</property>
+	</bean>
+</beans>
